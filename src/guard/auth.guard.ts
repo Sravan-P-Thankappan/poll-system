@@ -17,9 +17,14 @@ export class AuthGuard implements CanActivate {
         return type === 'Bearer' ? token : undefined;
     }
 
+    private excludedPath = ['/poll/fetch']
+
     async canActivate(context: ExecutionContext): Promise<boolean> {
         const request = context.switchToHttp().getRequest();
-        // console.log("re===>",request.path)
+
+        // excluding public api from authorization check
+        if (this.excludedPath.includes(request.path)) return true;
+
         const token = this.extractTokenFromHeader(request);
         if (!token) {
             throw new UnauthorizedException();

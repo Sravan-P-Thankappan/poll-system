@@ -32,7 +32,16 @@ export class PollService {
         });
         await this.pollRepository.save(newPoll);
         return {
-            message:"Poll Created"
+            message: "Poll Created"
+        }
+    }
+
+    async fetchPolls() {
+        const polls = await this.pollRepository.find({ relations: { options: true } });
+        if (polls.length == 0) return { mesaage: "No Data" }
+        return {
+            message: "Success",
+            data: polls
         }
     }
 }
